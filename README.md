@@ -1,59 +1,69 @@
-<p align="center"><img src="addons/supabase/icon.svg" width="80px"/></p>
+<p align="center"><img src="https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png" width="80px"/></p>
 
-👉 [3.x](https://github.com/supabase-community/godot-engine.supabase/tree/main)
+# Supabase API for Godot 4.x
+Adds Supabase compatibility in Godot 4.x.
 
-# Godot Engine - Supabase (4.x)
-A lightweight addon which integrates Supabase APIs for Godot Engine out of the box.  
+Tested up to 4.0.1
 
-- [x] Authentication (/auth)
-- [x] Database (/database)
-- [x] Realtime (/realtime)
-- [x] Storage (/storage)
+<br>
 
+### Some snippets
 
-### UI Library
-A drag&drop UI Library is available at [supabase-ui](https://github.com/fenix-hub/godot-engine.supabase-ui).
+Initialize API and signup
+```
+const config := {
+	"supabaseUrl" : "{yourprojectURL}",
+	"supabaseKey" : "{yourprojectKEY}"
+}
 
-### examples and demos
-A collection of examples and live demos is available at [*fenix-hub/godot-engine.supabase-examples*](https://github.com/fenix-hub/godot-engine.supabase-examples), both with source code and exported binaries.  
-
-### how to use
-A wiki is available [*here*](https://github.com/fenix-hub/godot-engine.supabase/wiki).  
-Even though it is still not complete, Classes and APIs references are always listed and updated.  
-
-### code snippet
-Multiple approaches!
-
-*Asynchronous (signals)*
-```gdscript
-# method 1 (connecting to `Supabase.auth.signed_in` signal)
 func _ready():
-	Supabase.auth.signed_in.connect(_on_signed_in)
-	Supabase.auth.sign_in(
-		"user@supabase.email",
-		"userpwd"
-	)
-
-func _on_signed_in(user: SupabaseUser) -> void:
-	print(user)
-
-# method 2 (using lambdas, connecting to the `AuthTask.completed` signal)
-func _ready():
-	Supabase.auth.sign_in(
-		"user@supabase.email",
-		"userpwd"
-	).completed.connect(
-		func(authTask: AuthTask) -> void:
-			print(auth_task.user)
-	)
+	Supabase.load_config(config)
+	var signing_in = Supabase.Auth.sign_in("something@email.org", "password")
+	var auth : AuthTask = await signing_in.completed # currently needs to be split this way due to a RC6 bug
 ```
 
-*Synchronous (await)*
-```gdscript
-func _ready():
-	var auth_task: AuthTask = await Supabase.auth.sign_in(
-		"user@supabase.email",
-		"userpwd"
-	).completed
-	print(auth_task.user)
+<br>
+
+Login, get user data from database and avatar from storage
 ```
+func _ready():
+	var auth : AuthTask = await Supabase.Auth.sign_in("something@email.org", "password").completed # without the bug workaround, see above for RC6 version
+	var query := SupabaseQuery.new().from("yourTable").select().eq("uid", auth_task.data.user.id)
+	var query_task = await Supabase.Database.query(query).completed
+	var download_task = await Supabase.Storage.from("avatars").download("{userid}.png", "user://avatar.png").completed
+```
+
+<br>
+
+Login anonymously and subscribe to a realtime database
+```
+func _ready():
+	Supabase.Auth.sign_in_anonymous()
+	var client : RealtimeClient = await Supabase.Realtime.connected_client()
+	var channel := client.channel("public").subscribe()
+	channel.insert.connect(_on_insert)
+	channel.update.connect(_on_update)
+	
+func _on_insert(data : Dictionary):
+	print(data)
+
+func _on_update(data : Dictionary):
+	print(data)
+```
+
+<br>
+
+---
+
+### Need some testing:
+- SupabaseAuth.sign_up_phone()
+- SupabaseAuth.sign_in_phone()
+- SupabaseAuth.sign_in_otp()
+- SupabaseAuth.verify_otp()
+- SupabaseAuth.send_magic_link()
+- SupabaseAuth.update()
+- SupabaseAuth.reset_password_for_email()
+- SupabaseAuth.invite_user_by_email()
+- SupabaseDatabase.call_rpc()
+
+Help is welcome!
