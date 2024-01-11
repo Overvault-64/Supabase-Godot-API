@@ -35,6 +35,7 @@ func call_rpc(function_name : String, arguments := {}, supabase_query : Supabase
 
 func _process_task(task : DatabaseTask) -> void:
 	var httprequest := HTTPRequest.new()
+	httprequest.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(httprequest)
 	task.completed.connect(_on_task_completed)
 	task.push_request(httprequest)

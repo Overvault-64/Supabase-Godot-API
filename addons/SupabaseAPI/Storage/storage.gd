@@ -66,6 +66,7 @@ func from(id : String) -> StorageBucket:
 
 func _process_task(task : StorageTask) -> void:
 	var httprequest := HTTPRequest.new()
+	httprequest.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(httprequest)
 	task.completed.connect(_on_task_completed)
 	task.push_request(httprequest)

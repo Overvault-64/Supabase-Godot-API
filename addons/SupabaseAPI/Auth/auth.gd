@@ -163,6 +163,7 @@ func _get_link_response(delta : float):
 func _process_task(task : AuthTask) -> void:
 	task.completed.connect(_on_task_completed)
 	var httprequest := HTTPRequest.new()
+	httprequest.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(httprequest)
 	task.push_request(httprequest)
 
