@@ -201,9 +201,9 @@ func _internal_process(_delta : float) -> void:
 					_response_headers = _http_client.get_response_headers() # Get response headers.
 					_response_code = _http_client.get_response_code()
 					
-					for header in _response_headers:
-						if "Content-Length" in header:
-							_content_length = header.trim_prefix("Content-Length: ").to_int()
+					for _header in _response_headers:
+						if "Content-Length" in _header:
+							_content_length = _header.trim_prefix("Content-Length: ").to_int()
 				
 				_http_client.poll()
 				var chunk : PackedByteArray = _http_client.read_response_body_chunk() # Get a chunk.

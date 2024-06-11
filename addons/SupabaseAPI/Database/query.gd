@@ -10,6 +10,10 @@ var query_struct := {
 	Or = PackedStringArray([]),
 	eq = PackedStringArray([]),
 	neq = PackedStringArray([]),
+	gt = PackedStringArray([]),
+	lt = PackedStringArray([]),
+	gte = PackedStringArray([]),
+	lte = PackedStringArray([]),
 	like = PackedStringArray([]),
 	ilike = PackedStringArray([]),
 	Is = PackedStringArray([]),
@@ -125,8 +129,8 @@ func delete() -> SupabaseQuery:
 
 ## [MODIFIERS] -----------------------------------------------------------------
 
-func range_query(from : int, to : int) -> SupabaseQuery:
-	header = PackedStringArray(["Range: " + str(from) + "-" + str(to)])
+func range_query(_from : int, _to : int) -> SupabaseQuery:
+	header = PackedStringArray(["Range: " + str(_from) + "-" + str(_to)])
 	return self
 	
 	
@@ -145,8 +149,8 @@ func order(column : String, direction : int = DIRECTIONS.ASCENDING, nullsorder :
 
 ## [FILTERS] -------------------------------------------------------------------- 
 
-func filter(column : String, filter : int, value : String, _props : Dictionary = {}) -> SupabaseQuery:
-	var filter_str : String = match_filter(filter)
+func filter(column : String, _filter : int, value : String, _props : Dictionary = {}) -> SupabaseQuery:
+	var filter_str : String = match_filter(_filter)
 	var array : PackedStringArray = query_struct[filter_str] as PackedStringArray
 	var struct_filter : String = filter_str
 	if _props.has("config"):
@@ -157,17 +161,17 @@ func filter(column : String, filter : int, value : String, _props : Dictionary =
 	match filter_str:
 		"Or":
 			if _props.has("queries"):
-				for query in _props.get("queries"):
-					array.append(query.build_query().replace("=", ".") if (not query is String) else query)
+				for _query in _props.get("queries"):
+					array.append(_query.build_query().replace("=", ".") if (not _query is String) else _query)
 		_:
 			array.append("%s=%s.%s" % [column, struct_filter.to_lower(), value])
 	query_struct[filter_str] = array
 	return self
 
 
-func match_filter(filter : int) -> String:
+func match_filter(_filter : int) -> String:
 	var filter_str : String
-	match filter:
+	match _filter:
 		FILTERS.EQUAL:
 			filter_str = "eq"
 		FILTERS.FTS:
@@ -273,19 +277,19 @@ func Or(queries : Array) -> SupabaseQuery:
 
 
 # Text Search
-func text_search(column : String, query : String, type := "", config := "") -> SupabaseQuery:
-	var filter : int
+func text_search(column : String, _query : String, type := "", config := "") -> SupabaseQuery:
+	var _filter : int
 	match type:
 		"plain":
-			filter = FILTERS.PLFTS
+			_filter = FILTERS.PLFTS
 		"phrase":
-			filter = FILTERS.PHFTS
+			_filter = FILTERS.PHFTS
 		"websearch":
-			filter = FILTERS.WFTS
+			_filter = FILTERS.WFTS
 		_:
-			filter = FILTERS.FTS
-	query = query.replacen(" ", "%20")
-	filter(column, filter, query, {config = config} if config != "" else {})
+			_filter = FILTERS.FTS
+	_query = _query.replacen(" ", "%20")
+	filter(column, _filter, _query, {config = config} if config != "" else {})
 	return self
 
 

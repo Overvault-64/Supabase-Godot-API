@@ -121,7 +121,7 @@ func send_magic_link(email : String) -> AuthTask:
 
 
 # Get the JSON object for the logged in user.
-func get_user_as_json(user_access_token : String = user.access_token) -> AuthTask:
+func get_user_as_json(_user_access_token : String = user.access_token) -> AuthTask:
 	return get_task(AuthTask.METHODS.USER, _user_endpoint)
 
 
@@ -142,9 +142,9 @@ func invite_user_by_email(email : String) -> AuthTask:
 
 # Refresh the access_token of the authenticated user using the refresh_token
 # No need to call this manually except specific needs, since the process will be handled automatically
-func refresh_token(refresh_token : String = user.refresh_token, expires_in : float = user.expires_in) -> AuthTask:
+func refresh_token(_refresh_token : String = user.refresh_token, expires_in : float = user.expires_in) -> AuthTask:
 	await get_tree().create_timer(expires_in - 10).timeout
-	return get_task(AuthTask.METHODS.REFRESH, _invite_endpoint, {refresh_token = refresh_token})
+	return get_task(AuthTask.METHODS.REFRESH, _invite_endpoint, {refresh_token = _refresh_token})
 
 
 

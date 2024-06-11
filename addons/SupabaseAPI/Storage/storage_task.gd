@@ -70,7 +70,7 @@ func push_request(httprequest : HTTPRequest) -> void:
 	httprequest.request(endpoint, headers, method, payload)
 
 
-func _on_task_completed(result : int, _response_code : int, headers : PackedStringArray, body : PackedByteArray) -> void:
+func _on_task_completed(_result : int, _response_code : int, _headers : PackedStringArray, body : PackedByteArray) -> void:
 	var result_body
 	if body.size() > 0 and body.get_string_from_utf8() != null:
 		result_body = JSON.parse_string(body.get_string_from_utf8())

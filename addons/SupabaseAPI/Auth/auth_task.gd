@@ -45,8 +45,8 @@ func _init(_code : int, _endpoint : String, _headers : PackedStringArray, _paylo
 	method = match_code(code)
 
 
-func match_code(code : int) -> int:
-	match code:
+func match_code(_code : int) -> int:
+	match _code:
 		METHODS.SIGNIN, METHODS.SIGNUP, METHODS.LOGOUT, METHODS.MAGICLINK, METHODS.RECOVER, METHODS.REFRESH, METHODS.INVITE:
 			return HTTPClient.METHOD_POST
 		METHODS.UPDATE:
@@ -61,7 +61,7 @@ func push_request(httprequest : HTTPRequest) -> void:
 	handler.request(endpoint, headers, method, JSON.stringify(payload))
 
 
-func _on_task_completed(result : int, _response_code : int, headers : PackedStringArray, body : PackedByteArray) -> void:
+func _on_task_completed(_result : int, _response_code : int, _headers : PackedStringArray, body : PackedByteArray) -> void:
 	response_code = _response_code
 	var result_body
 	if body.size() > 0 and body.get_string_from_utf8() != null:
