@@ -15,7 +15,7 @@ var query : SupabaseQuery
 # EXPOSED VARIABLES ---------------------------------------------------------
 var data
 var response_code : int
-var error : Dictionary
+var error
 # ---------------------------------------------------------------------------
 
 var handler : HTTPRequest
