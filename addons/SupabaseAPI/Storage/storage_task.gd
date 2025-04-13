@@ -73,7 +73,7 @@ func push_request(httprequest : HTTPRequest) -> void:
 func _on_task_completed(_result : int, _response_code : int, _headers : PackedStringArray, body : PackedByteArray) -> void:
 	var result_body
 	if body.size() > 0 and body.get_string_from_utf8() != null:
-		result_body = JSON.parse_string(body.get_string_from_utf8())
+		result_body = Supabase.JSONParser.parse_string(body.get_string_from_utf8())
 	response_code = _response_code
 	if response_code in [200, 201, 204]:
 		if code == METHODS.DOWNLOAD:

@@ -167,7 +167,7 @@ func _process(_delta : float) -> void:
 			_heartbeat_timer.stop()
 			disconnected.emit()
 	while _ws_client.get_ready_state() == _ws_client.STATE_OPEN and _ws_client.get_available_packet_count():
-		message_received.emit(JSON.parse_string(get_message()))
+		message_received.emit(Supabase.JSONParser.parse_string(get_message()))
 	
 	
 func get_message() -> Variant:

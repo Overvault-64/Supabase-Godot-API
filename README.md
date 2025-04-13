@@ -1,9 +1,9 @@
-<p align="center"><img src="https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png" width="80px"/></p>
-
 # Supabase API for Godot 4
 Adds Supabase connectivity in Godot 4.
 
-Tested up to 4.2.stable
+Tested up to 4.4.1.stable
+
+NOTE: It uses a custom JSON parser to preserve the distinction between ints and floats
 
 <br>
 

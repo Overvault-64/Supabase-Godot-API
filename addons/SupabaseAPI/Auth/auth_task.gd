@@ -64,8 +64,9 @@ func push_request(httprequest : HTTPRequest) -> void:
 func _on_task_completed(_result : int, _response_code : int, _headers : PackedStringArray, body : PackedByteArray) -> void:
 	response_code = _response_code
 	var result_body
-	if body.size() > 0 and body.get_string_from_utf8() != null:
-		result_body = JSON.parse_string(body.get_string_from_utf8())
+	var body_string = body.get_string_from_utf8()
+	if body.size() > 0 and body_string != null:
+		result_body = Supabase.JSONParser.parse_string(body_string)
 	match response_code:
 		0, 200, 201, 204:
 			data = result_body
